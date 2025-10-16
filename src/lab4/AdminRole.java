@@ -8,12 +8,8 @@ package lab4;
  *
  * @author HP
  */
-public class LocalDate { // DD-MM-YYYY
-    int day;
-    int month;
-    int year;
-    public LocalDate (int day, int month, int year){
-        
-
-    }
+public class AdminRole {
+    private EmployeeUserDatabase database;
+    
+    
 }

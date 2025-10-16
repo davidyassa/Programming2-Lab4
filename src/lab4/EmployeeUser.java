@@ -9,13 +9,32 @@ package lab4;
  * @author HP
  */
 public class EmployeeUser {
-    private String employeeId;
-    private String Name;
-    private String Email; 
-    private String Address;
-    private String PhoneNumber;
-    
-    public EmployeeUser(String employeeId, String name, String email, String address,String phoneNumber){
-        
+
+    private final String employeeId;
+    private final String Name;
+    private final String Email;
+    private final String Address;
+    private final String PhoneNumber;
+
+    public EmployeeUser(String employeeId, String Name, String Email, String Address, String PhoneNumber) {
+        this.employeeId = employeeId;
+        this.Name = Name;
+        this.Email = Email;
+        this.Address = Address;
+        this.PhoneNumber = PhoneNumber;
+    }
+
+    public String lineRepresentation() { //: returns the data of the employee comma separated.
+        String line = String.join(",",
+                employeeId,
+                Name,
+                Email,
+                Address,
+                PhoneNumber);
+        return line;
+    }
+
+    public String getSearchKey() { //: returns the employee id.
+        return employeeId;
     }
 }
