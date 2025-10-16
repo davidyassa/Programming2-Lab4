@@ -15,7 +15,20 @@
      4. Reopen the terminal window inside the repo folder, then type: `git checkout ` + your branch name
 3. Open Netbeans then go to "File > Open project" and choose the local repo folder
 
-### 3 - Workflow:  
+### 3 - Entering GitHub user&pass in Netbeans
+
+1. Go to your GitHub profile settings in the top right corner
+2. Scroll down on the left pane to "<> developer settings"
+3. "Personal Access Tokens > Tokens (classic) > Generate new token (classic)"
+4. Confirm Access with password or passkey
+5. Name the key (e.g. Netbeans)
+6. Set expiration date (no expiration if you want this to be one-time)
+7. Select Scopes → `repo`, which gives you access to all your GitHub repos
+8. Scroll to the end to "Generate new token"
+9. Copy the given key (long code) and paste it in the "password" value in Netbeans
+
+
+### 4 - Workflow:  
 1. Before working, pull changes from `devel`  (development branch)
     - "Git > Pull > devel"
 2. After you're done coding, add your files to be comitted
