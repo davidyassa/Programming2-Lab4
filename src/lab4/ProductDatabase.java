@@ -68,12 +68,14 @@ public class ProductDatabase extends Database<Product> {
 
                   Product product = new Product(id, name, manufacturer, supplier, quantity, price);
                   return product;
-    }
+    } 
                 
-     public ArrayList<Product> returnAllRecords() {
+      public ArrayList<Product> returnAllRecords() {
 
     return new ArrayList<>(records); 
+    
     }
+     
     public boolean contains(String key)
     {  
     for (int i = 0; i < records.size(); i++) {
@@ -122,5 +124,6 @@ public class ProductDatabase extends Database<Product> {
         System.err.println("Error writing to file: " + e.getMessage());
     }
 }
+    
 }
 
