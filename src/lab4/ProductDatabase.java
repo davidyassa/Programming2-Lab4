@@ -69,8 +69,10 @@ public class ProductDatabase extends Database<Product> {
                   Product product = new Product(id, name, manufacturer, supplier, quantity, price);
                   return product;
     } 
-                
-      public ArrayList<Product> returnAllRecords() {
+                return null;
+      }             
+    
+    public ArrayList<Product> returnAllRecords() {
 
     return new ArrayList<>(records); 
     
