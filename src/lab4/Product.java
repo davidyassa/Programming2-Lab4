@@ -44,8 +44,5 @@ public String lineRepresentation()
    
    return line ;
 }
-public String getobject() {
-    return productID + "," + productName + "," + manufacturerName + "," +
-           supplierName + "," + quantity + "," + price;
-}
+
 }
