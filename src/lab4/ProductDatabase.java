@@ -95,9 +95,9 @@ public class ProductDatabase extends Database<Product> {
         return null;
     }
 
-    public void insertRecord(Product record) {
+   /* public void insertRecord(Product record) {
         records.add(record);
-    }
+    }   this method  found in database   */ 
 
     public void deleteRecord(String key) {
         for (int i = 0; i < records.size(); i++) {
@@ -112,7 +112,7 @@ public class ProductDatabase extends Database<Product> {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (int i = 0; i < records.size(); i++) {
                 Product p = records.get(i);
-                writer.write(p.getobject());
+                writer.write(p.lineRepresentation());
                 writer.newLine();
             }
             System.out.println("Products written to file successfully.");
