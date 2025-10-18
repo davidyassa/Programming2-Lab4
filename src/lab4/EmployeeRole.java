@@ -2,13 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package employeerolelab4;
+package lab4;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.io.IOException;
 
 public class EmployeeRole {
+
     private ProductDatabase productsDatabase;
     private CustomerProductDatabase customerProductDatabase;
 
@@ -28,9 +30,10 @@ public class EmployeeRole {
     }
 
     // Add new product
-    public void addProduct(String productID, String productName, String manufacturerName, String supplierName, int quantity) {
-        Product product = new Product(productID.trim(), productName.trim(), manufacturerName.trim(), supplierName.trim(), quantity, 0f);
+    public void addProduct(String productID, String productName, String manufacturerName, String supplierName, int quantity, float price) {
+        Product product = new Product(productID.trim(), productName.trim(), manufacturerName.trim(), supplierName.trim(), quantity, price);
         productsDatabase.insertRecord(product);
+        productsDatabase.saveToFile();
     }
 
     // 2
@@ -47,41 +50,74 @@ public class EmployeeRole {
 
     // 4 
     public boolean purchaseProduct(String customerSSN, String productID, LocalDate purchaseDate) {
-        if (!productsDatabase.contains(productID)) return false;
+        if (!productsDatabase.contains(productID)) {
+            return false;
+        }
 
         Product product = productsDatabase.getRecord(productID);
-        if (product.getQuantity() == 0) return false;
+        if (product.getQuantity() == 0) {
+            return false;
+        }
 
         product.setQuantity(product.getQuantity() - 1);
-        CustomerProduct purchase = new CustomerProduct(customerSSN.trim(), productID.trim(), purchaseDate);
+        boolean paid = false;
+        CustomerProduct purchase = new CustomerProduct(customerSSN.trim(), productID.trim(), purchaseDate, paid);
         customerProductDatabase.insertRecord(purchase);
+        productsDatabase.saveToFile();
+        try {
+            customerProductDatabase.saveToFile();
+        } catch (IOException e) {
+            System.out.println("Error saving files: " + e.getMessage());
+        }
         return true;
     }
 
     // 5
     public double returnProduct(String customerSSN, String productID, LocalDate purchaseDate, LocalDate returnDate) {
-        if (returnDate.isBefore(purchaseDate)) return -1;
-        if (!productsDatabase.contains(productID)) return -1;
+        if (returnDate.isBefore(purchaseDate)) {
+            return -1;
+        }
+        if (!productsDatabase.contains(productID)) {
+            return -1;
+        }
 
         String key = customerSSN.trim() + "," + productID.trim() + "," + formatDate(purchaseDate);
-        if (!customerProductDatabase.contains(key)) return -1;
+        if (!customerProductDatabase.contains(key)) {
+            return -1;
+        }
 
         long days = ChronoUnit.DAYS.between(purchaseDate, returnDate);
-        if (days > 14) return -1;
+        if (days > 14) {
+            return -1;
+        }
 
         Product product = productsDatabase.getRecord(productID);
         product.setQuantity(product.getQuantity() + 1);
         customerProductDatabase.deleteRecord(key);
-        return product.getPrice();
+
+        try {
+            customerProductDatabase.saveToFile();
+        } catch (IOException e) {
+            System.out.println("Error saving files: " + e.getMessage());
+        }
+        String[] parts = product.getobject().split(",");
+        if (parts.length == 6) {
+            try {
+                return Double.parseDouble(parts[5]);
+            } catch (NumberFormatException e) {
+                return -1;
+            }
+        }
+        return -1;
     }
 
     // 6
     public boolean applyPayment(String customerSSN, LocalDate purchaseDate) {
         String targetDate = formatDate(purchaseDate);
         for (CustomerProduct cp : customerProductDatabase.returnAllRecords()) {
-            if (cp.getCustomerSSN().equals(customerSSN.trim()) &&
-                formatDate(cp.getPurchaseDate()).equals(targetDate) &&
-                !cp.isPaid()) {
+            if (cp.getCustomerSSN().equals(customerSSN.trim())
+                    && formatDate(cp.getPurchaseDate()).equals(targetDate)
+                    && !cp.isPaid()) {
                 cp.setPaid(true);
                 return true;
             }
@@ -97,13 +133,21 @@ public class EmployeeRole {
     // Read data
     public void readFiles() {
         productsDatabase.readFromFile();
-        customerProductDatabase.readFromFile();
+        try {
+            customerProductDatabase.readFromFile();
+        } catch (IOException e) {
+            System.out.println("Error reading customer products: " + e.getMessage());
+        }
     }
 
     // Save data
     public void saveFiles() {
         productsDatabase.saveToFile();
-        customerProductDatabase.saveToFile();
+        try {
+            customerProductDatabase.saveToFile();
+        } catch (IOException e) {
+            System.out.println("Error saving customer products: " + e.getMessage());
+        }
     }
 
     // Format date 
