@@ -44,7 +44,8 @@ public abstract class Database<T extends Recordable> {
     }
 
     public boolean contains(String key) {
-        for (T t : data) {
+        for (int i = 0; i < data.size(); i++) {
+            T t = data.get(i);
             if (t.getSearchKey().equals(key)) {
                 return true;
             }
@@ -53,7 +54,8 @@ public abstract class Database<T extends Recordable> {
     }
 
     public T getRecord(String key) {
-        for (T t : data) {
+        for (int i = 0; i < data.size(); i++) {
+            T t = data.get(i);
             if (t.getSearchKey().equals(key)) {
                 return t;
             }
@@ -71,9 +73,9 @@ public abstract class Database<T extends Recordable> {
     }
 
     public void saveToFile() throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) { //try automatically calls pw.close()
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) { //try automatically calls writer.close()
             for (T t : data) {
-                pw.println(t.lineRepresentation());
+                writer.println(t.lineRepresentation());
             }
         }
     }
