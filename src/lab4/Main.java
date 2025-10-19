@@ -82,7 +82,7 @@ public class Main {
                                 c[0],
                                 c[1],
                                 LocalDate.parse(c[2],
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                                        DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                                 Boolean.parseBoolean(c[3])));
                         System.out.println("Customer-product record added!");
                     }
@@ -110,10 +110,8 @@ public class Main {
                     }
                 }
 
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 System.out.println("Invalid input format!");
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Too few or too many inputs — check your commas!");
             } catch (IOException e) {
                 System.out.println("File error: " + e.getMessage());
             } catch (Exception e) {
