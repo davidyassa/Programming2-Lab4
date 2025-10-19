@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Github Repository Instructions
 
 ### 1 - Create your branch
@@ -43,3 +44,7 @@
     - add a brief comment
 7. Once the merge request is approved, `devel` will be up to date with your code
 8. When the project reaches its very final stage, it will be merged onto `main`
+=======
+# Programming2-Lab4
+Database System
+>>>>>>> aa5f3037269c87bb1bf2ccaa71fdd8aebac55139
