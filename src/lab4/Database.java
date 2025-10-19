@@ -4,32 +4,77 @@
  */
 package lab4;
 
+import java.io.*;
 import java.util.ArrayList;
-import java.io.IOException;
 
 /**
  * Generic abstract database class for managing records of type T.
  *
- * @param <T> EmployeeUser, Product, and CustomerProduct
+ * @param <T> EmployeeUser, Product, and CustomerProduct, which all implement
+ * Recordable
  */
-public abstract class Database<T> {
-    protected ArrayList<T> Users;
+public abstract class Database<T extends Recordable> {
+
+    protected ArrayList<T> data;
     protected String filename;
 
+//    public abstract void readFromFile() throws IOException;
+//    public abstract boolean contains(String key);
+//    public abstract T getRecord(String key);
+//    public abstract void deleteRecord(String key);
+//    public abstract void saveToFile() throws IOException;
     public Database(String filename) {
         this.filename = filename;
+        data = new ArrayList<>();
     }
-    
-    public abstract void readFromFile() throws IOException;
+
+    public void readFromFile() throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                insertRecord(createRecordFrom(line));
+            }
+        }
+    }
+
     public abstract T createRecordFrom(String line);
-    public ArrayList<T> returnAllRecords(){
-        return Users;
+
+    public ArrayList<T> returnAllRecords() {
+        return data;
     }
-    public abstract boolean contains(String key);
-    public abstract T getRecord(String key);
-    public void insertRecord(T record){
-        Users.add(record);
+
+    public boolean contains(String key) {
+        for (T t : data) {
+            if (t.getSearchKey().equals(key)) {
+                return true;
+            }
+        }
+        return false;
     }
-    public abstract void deleteRecord(String key);
-    public abstract void saveToFile() throws IOException;
+
+    public T getRecord(String key) {
+        for (T t : data) {
+            if (t.getSearchKey().equals(key)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public void insertRecord(T record) {
+        data.add(record);
+    }
+
+    public void deleteRecord(String key) {
+
+        data.removeIf(t -> t.getSearchKey().equals(key));
+    }
+
+    public void saveToFile() throws IOException {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) { //try automatically calls pw.close()
+            for (T t : data) {
+                pw.println(t.lineRepresentation());
+            }
+        }
+    }
 }
