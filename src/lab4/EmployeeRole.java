@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package lab4;
 
 import java.time.LocalDate;
@@ -22,34 +18,35 @@ public class EmployeeRole {
         return customerProductDatabase;
     }
 
-    
-    public EmployeeRole() {
+    public EmployeeRole() throws IOException {
         productsDatabase = new ProductDatabase("Products.txt");
         customerProductDatabase = new CustomerProductDatabase("CustomersProducts.txt");
-        readFiles();
+        productsDatabase.readFromFile();
+        customerProductDatabase.readFromFile();
     }
 
-    // Add new product
-    public void addProduct(String productID, String productName, String manufacturerName, String supplierName, int quantity, float price) {
+    public void addProduct(String productID, String productName, String manufacturerName, String supplierName, int quantity, float price) throws IOException {
         Product product = new Product(productID.trim(), productName.trim(), manufacturerName.trim(), supplierName.trim(), quantity, price);
         productsDatabase.insertRecord(product);
         productsDatabase.saveToFile();
     }
 
-    // 2
+    public void addProduct(String productID, String productName, String manufacturerName, String supplierName, int quantity) throws IOException {
+        float defaultPrice = 0.0f;
+        addProduct(productID, productName, manufacturerName, supplierName, quantity, defaultPrice);
+    }
+
     public Product[] getListOfProducts() {
         ArrayList<Product> list = productsDatabase.returnAllRecords();
         return list.toArray(new Product[0]);
     }
 
-    // 3
     public CustomerProduct[] getListOfPurchasingOperations() {
         ArrayList<CustomerProduct> list = customerProductDatabase.returnAllRecords();
         return list.toArray(new CustomerProduct[0]);
     }
 
-    // 4 
-    public boolean purchaseProduct(String customerSSN, String productID, LocalDate purchaseDate) {
+    public boolean purchaseProduct(String customerSSN, String productID, LocalDate purchaseDate) throws IOException {
         if (!productsDatabase.contains(productID)) {
             return false;
         }
@@ -64,16 +61,11 @@ public class EmployeeRole {
         CustomerProduct purchase = new CustomerProduct(customerSSN.trim(), productID.trim(), purchaseDate, paid);
         customerProductDatabase.insertRecord(purchase);
         productsDatabase.saveToFile();
-        try {
-            customerProductDatabase.saveToFile();
-        } catch (IOException e) {
-            System.out.println("Error saving files: " + e.getMessage());
-        }
+        customerProductDatabase.saveToFile();
         return true;
     }
 
-    // 5
-    public double returnProduct(String customerSSN, String productID, LocalDate purchaseDate, LocalDate returnDate) {
+    public double returnProduct(String customerSSN, String productID, LocalDate purchaseDate, LocalDate returnDate) throws IOException {
         if (returnDate.isBefore(purchaseDate)) {
             return -1;
         }
@@ -94,13 +86,11 @@ public class EmployeeRole {
         Product product = productsDatabase.getRecord(productID);
         product.setQuantity(product.getQuantity() + 1);
         customerProductDatabase.deleteRecord(key);
+        customerProductDatabase.saveToFile();
+        productsDatabase.saveToFile();
 
-        try {
-            customerProductDatabase.saveToFile();
-        } catch (IOException e) {
-            System.out.println("Error saving files: " + e.getMessage());
-        }
-        String[] parts = product.getobject().split(",");
+        String line = product.lineRepresentation();
+        String[] parts = line.split(",");
         if (parts.length == 6) {
             try {
                 return Double.parseDouble(parts[5]);
@@ -111,48 +101,32 @@ public class EmployeeRole {
         return -1;
     }
 
-    // 6
-    public boolean applyPayment(String customerSSN, LocalDate purchaseDate) {
+    public boolean applyPayment(String customerSSN, LocalDate purchaseDate) throws IOException {
         String targetDate = formatDate(purchaseDate);
         for (CustomerProduct cp : customerProductDatabase.returnAllRecords()) {
-            if (cp.getCustomerSSN().equals(customerSSN.trim())
-                    && formatDate(cp.getPurchaseDate()).equals(targetDate)
-                    && !cp.isPaid()) {
+            if (cp.getCustomerSSN().equals(customerSSN.trim()) && formatDate(cp.getPurchaseDate()).equals(targetDate) && !cp.isPaid()) {
                 cp.setPaid(true);
+                customerProductDatabase.saveToFile();
                 return true;
             }
         }
         return false;
     }
 
-    // 7
-    public void logout() {
+    public void logout() throws IOException {
         saveFiles();
     }
 
-    // Read data
-    public void readFiles() {
+    public void readFiles() throws IOException {
         productsDatabase.readFromFile();
-        try {
-            customerProductDatabase.readFromFile();
-        } catch (IOException e) {
-            System.out.println("Error reading customer products: " + e.getMessage());
-        }
+        customerProductDatabase.readFromFile();
     }
 
-    // Save data
-    public void saveFiles() {
+    public void saveFiles() throws IOException {
         productsDatabase.saveToFile();
-        try {
-            customerProductDatabase.saveToFile();
-        } catch (IOException e) {
-            System.out.println("Error saving customer products: " + e.getMessage());
-        }
+        customerProductDatabase.saveToFile();
     }
-
-    // Format date 
     private String formatDate(LocalDate date) {
         return String.format("%d-%d-%d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
     }
 }
-
