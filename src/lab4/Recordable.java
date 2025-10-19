@@ -8,9 +8,8 @@ package lab4;
  *
  * @author HP
  */
-
 public interface Recordable {
+
     String lineRepresentation();
     String getSearchKey();
 }
-
