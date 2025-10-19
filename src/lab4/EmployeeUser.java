@@ -8,7 +8,7 @@ package lab4;
  *
  * @author HP
  */
-public class EmployeeUser {
+public class EmployeeUser implements Recordable{
 
     private final String employeeId;
     private final String Name;
@@ -23,7 +23,8 @@ public class EmployeeUser {
         this.Address = Address;
         this.PhoneNumber = PhoneNumber;
     }
-
+    
+    @Override
     public String lineRepresentation() { //: returns the data of the employee comma separated.
         String line = String.join(",",
                 employeeId,
@@ -33,7 +34,7 @@ public class EmployeeUser {
                 PhoneNumber);
         return line;
     }
-
+    @Override
     public String getSearchKey() { //: returns the employee id.
         return employeeId;
     }
