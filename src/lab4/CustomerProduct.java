@@ -7,7 +7,7 @@ package lab4;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class CustomerProduct {
+public class CustomerProduct implements Recordable{
 
     private final String customerSSN;
     private final String productID;
@@ -32,7 +32,8 @@ public class CustomerProduct {
     public LocalDate getPurchaseDate() {
         return purchaseDate;
     }
-
+    
+    @Override
     public String lineRepresentation() { // returns the data of the object comma separated.
         String Date = purchaseDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String line = String.join(",",
@@ -51,7 +52,8 @@ public class CustomerProduct {
     public void setPaid(boolean paid) {
         this.paid = paid;
     }
-
+    
+    @Override
     public String getSearchKey() {
         String Date = purchaseDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String line = String.join(",",
