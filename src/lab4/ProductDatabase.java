@@ -4,10 +4,9 @@
  */
 package lab4;
 
-/**
- *
- * @author HP
- */
+import java.io.IOException;
+import java.util.Comparator;
+
 public class ProductDatabase extends Database<Product> {
 
     public ProductDatabase(String filename) {
@@ -30,5 +29,11 @@ public class ProductDatabase extends Database<Product> {
             return product;
         }
         return null;
+    }
+
+    @Override
+    public void saveToFile() throws IOException {
+        data.sort(Comparator.comparing(Product::getSearchKey));
+        super.saveToFile();
     }
 }

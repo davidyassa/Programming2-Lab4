@@ -20,12 +20,6 @@ public class CustomerProductDatabase extends Database<CustomerProduct> {
     }
 
     @Override
-    public void readFromFile() throws IOException {
-        super.readFromFile();
-        Data.sort(Comparator.comparing(CustomerProduct::getPurchaseDate));
-    }
-
-    @Override
     public CustomerProduct createRecordFrom(String line) {
         int i = 0;
         String[] tokens = line.split(",");
@@ -36,5 +30,11 @@ public class CustomerProductDatabase extends Database<CustomerProduct> {
         boolean paid = Boolean.parseBoolean(tokens[i++]);
 
         return new CustomerProduct(customerSSN, productID, purchaseDate, paid);
+    }
+
+    @Override
+    public void saveToFile() throws IOException {
+        data.sort(Comparator.comparing(CustomerProduct::getPurchaseDate));
+        super.saveToFile();
     }
 }

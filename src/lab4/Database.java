@@ -6,7 +6,6 @@ package lab4;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * Generic abstract database class for managing records of type T.
@@ -16,7 +15,7 @@ import java.util.Comparator;
  */
 public abstract class Database<T extends Recordable> {
 
-    protected ArrayList<T> Data;
+    protected ArrayList<T> data;
     protected String filename;
 
 //    public abstract void readFromFile() throws IOException;
@@ -26,7 +25,7 @@ public abstract class Database<T extends Recordable> {
 //    public abstract void saveToFile() throws IOException;
     public Database(String filename) {
         this.filename = filename;
-        Data = new ArrayList<>();
+        data = new ArrayList<>();
     }
 
     public void readFromFile() throws IOException {
@@ -36,17 +35,16 @@ public abstract class Database<T extends Recordable> {
                 insertRecord(createRecordFrom(line));
             }
         }
-        Data.sort(Comparator.comparing(T::getSearchKey));
     }
 
     public abstract T createRecordFrom(String line);
 
     public ArrayList<T> returnAllRecords() {
-        return Data;
+        return data;
     }
 
     public boolean contains(String key) {
-        for (T t : Data) {
+        for (T t : data) {
             if (t.getSearchKey().equals(key)) {
                 return true;
             }
@@ -55,29 +53,26 @@ public abstract class Database<T extends Recordable> {
     }
 
     public T getRecord(String key) {
-        if (contains(key)) {
-            for (T t : Data) {
-                if (t.getSearchKey().equals(key)) {
-                    return t;
-                }
+        for (T t : data) {
+            if (t.getSearchKey().equals(key)) {
+                return t;
             }
         }
         return null;
     }
 
     public void insertRecord(T record) {
-        Data.add(record);
+        data.add(record);
     }
 
     public void deleteRecord(String key) {
 
-        Data.removeIf(t -> t.getSearchKey().equals(key));
+        data.removeIf(t -> t.getSearchKey().equals(key));
     }
 
     public void saveToFile() throws IOException {
-//        Data.sort(Comparator.comparing(T::getSearchKey));
         try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) { //try automatically calls pw.close()
-            for (T t : Data) {
+            for (T t : data) {
                 pw.println(t.lineRepresentation());
             }
         }

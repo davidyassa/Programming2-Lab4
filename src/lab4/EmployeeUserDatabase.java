@@ -4,6 +4,9 @@
  */
 package lab4;
 
+import java.io.IOException;
+import java.util.Comparator;
+
 /*
 E1200,Ahmed,ahmed_1999@gmail.com,Alexandria,01088877345 
 Note: The employee id is unique for each employee. 
@@ -19,5 +22,11 @@ public class EmployeeUserDatabase extends Database<EmployeeUser> { // for readin
         int i = 0;
         String[] tokens = line.split(",");
         return new EmployeeUser(tokens[i++], tokens[i++], tokens[i++], tokens[i++], tokens[i++]);
+    }
+
+    @Override
+    public void saveToFile() throws IOException {
+        data.sort(Comparator.comparing(EmployeeUser::getSearchKey));
+        super.saveToFile();
     }
 }
