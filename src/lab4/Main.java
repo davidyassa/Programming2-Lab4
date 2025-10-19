@@ -6,7 +6,6 @@ package lab4;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.InputMismatchException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
