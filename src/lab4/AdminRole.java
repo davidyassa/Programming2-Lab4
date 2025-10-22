@@ -33,7 +33,6 @@ public class AdminRole {
 
         try {
             if (database.contains(employeeId)) {
-                System.err.println("Error: Employee with ID " + employeeId + " already exists.");
                 return;
             }
             EmployeeUser newEmployee = new EmployeeUser(employeeId.trim(), name.trim(), email.trim(),
