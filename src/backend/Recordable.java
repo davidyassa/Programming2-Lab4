@@ -8,6 +8,7 @@ package backend;
  *
  * @author HP
  */
-public class FileManager {
-    
+public interface Recordable {
+
+    String lineRepresentation();
 }
