@@ -4,6 +4,8 @@
  */
 package backend;
 
+import controller.StudentManager;
+
 /**
  *
  * • Student ID (unique integer, automatically generated or entered by the user)
@@ -30,7 +32,7 @@ public class Student implements Recordable {
     }
 
     public Student(String name, int age, String gender, String department, float GPA) {
-        this.studentID = defaultID++;
+        this.studentID = StudentManager.generateID();
         this.name = name;
         this.age = age;
         this.gender = gender;

@@ -4,12 +4,7 @@
  */
 package backend;
 
-import java.util.ArrayList;
-
 public class StudentDatabase extends Database<Student> {
-
-    protected ArrayList<Student> data;
-    protected String filename;
 
     public StudentDatabase(String filename) {
         super(filename);

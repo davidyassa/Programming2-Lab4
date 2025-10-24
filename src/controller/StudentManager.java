@@ -23,6 +23,9 @@ public final class StudentManager {
     public static Student searchByID(int id) {
         return db.getRecord(id);
     }
+    public static Student searchByName(String name) {
+        return db.getRecord(name);
+    }
 
     public static void deleteStudent(int id) throws IOException {
         db.deleteRecord(id);
