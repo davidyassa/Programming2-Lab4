@@ -20,15 +20,18 @@ public final class StudentManager {
         db.insertRecord(s);
     }
 
-    public static Student searchByID(int id) {
+    public static Student search(int id) {
         return db.getRecord(id);
     }
-    public static Student searchByName(String name) {
+    public static Student search(String name) {
         return db.getRecord(name);
     }
 
     public static void deleteStudent(int id) throws IOException {
         db.deleteRecord(id);
+    }
+    public static void deleteStudent(String Name) throws IOException {
+        db.deleteRecord(Name);
     }
 
     public static void sortByName() {
