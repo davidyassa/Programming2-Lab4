@@ -5,6 +5,7 @@
 package backend;
 
 import controller.StudentManager;
+import java.io.IOException;
 
 /**
  *
@@ -20,7 +21,6 @@ public class Student implements Recordable {
     private String gender;
     private String department;
     private float GPA;
-    private static int defaultID = 1000;
 
     public Student(int StudentID, String name, int age, String gender, String department, float GPA) {
         this.studentID = StudentID;
@@ -31,18 +31,13 @@ public class Student implements Recordable {
         this.GPA = GPA;
     }
 
-    public Student(String name, int age, String gender, String department, float GPA) {
-        this.studentID = StudentManager.generateID();
+    public Student(String name, int age, String gender, String department, float GPA) throws IOException{
+        this.studentID = StudentDatabase.generateID("Students.txt");
         this.name = name;
         this.age = age;
         this.gender = gender;
         this.department = department;
         this.GPA = GPA;
-    }
-
-    @Override
-    public String lineRepresentation() {
-        return studentID + "," + name + "," + age + "," + gender + "," + department + "," + GPA;
     }
 
     // all setters available for updateStudent()
@@ -70,16 +65,18 @@ public class Student implements Recordable {
         this.GPA = GPA;
     }
 
-    public static void setDefaultID(int defaultID) {
-        Student.defaultID = defaultID;
-    }
-
-    public String getName() {
+    @Override
+    public String getSearchKey() {
         return name;
     }
 
     public int getStudentID() {
         return studentID;
+    }
+
+    @Override
+    public String lineRepresentation() {
+        return studentID + "," + name + "," + age + "," + gender + "," + department + "," + GPA;
     }
 
 }

@@ -10,5 +10,7 @@ package backend;
  */
 public interface Recordable {
 
+    String getSearchKey();
+
     String lineRepresentation();
 }

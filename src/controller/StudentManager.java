@@ -14,7 +14,12 @@ import java.util.Comparator;
  */
 public final class StudentManager {
 
-    private final static StudentDatabase db = new StudentDatabase("Students.txt");
+    private static StudentDatabase db;
+
+    public StudentManager(String filename) throws IOException{
+        db = new StudentDatabase(filename);
+        db.readFromFile();
+    }
 
     public static void addStudent(Student s) throws IOException {
         db.insertRecord(s);
@@ -23,6 +28,7 @@ public final class StudentManager {
     public static Student search(int id) {
         return db.getRecord(id);
     }
+
     public static Student search(String name) {
         return db.getRecord(name);
     }
@@ -30,29 +36,17 @@ public final class StudentManager {
     public static void deleteStudent(int id) throws IOException {
         db.deleteRecord(id);
     }
+
     public static void deleteStudent(String Name) throws IOException {
         db.deleteRecord(Name);
     }
 
     public static void sortByName() {
-        db.returnAllRecords().sort(Comparator.comparing(Student::getName));
+        db.returnAllRecords().sort(Comparator.comparing(Student::getSearchKey));
     }
 
     public static void sortByID() {
         db.returnAllRecords().sort(Comparator.comparing(Student::getStudentID));
-    }
-
-    public static int generateID() {
-        if (db.returnAllRecords().isEmpty()) {
-            return 1000;
-        }
-        int temp = db.returnAllRecords().get(0).getStudentID();
-        for (Student s : db.returnAllRecords()) {
-            if (s.getStudentID() > temp) {
-                temp = s.getStudentID();
-            }
-        }
-        return temp + 1;
     }
 
     public static void updateStudent(Student updated) { //no updating StudentID
