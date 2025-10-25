@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Generic abstract database class for managing records of type T.
  *
- * @param <T> Student,
+ * @param <T> Student, User, all of which implement Recordable
  */
 public abstract class Database<T extends Recordable> {
 
@@ -18,9 +18,29 @@ public abstract class Database<T extends Recordable> {
     protected String filename;
 
     public abstract T createRecordFrom(String line);
-    public abstract boolean contains(String key);
-    public abstract T getRecord(String key);
-    public abstract void deleteRecord(String key);
+
+    public T getRecord(String key) {
+        for (T t : data) {
+            if (t.getSearchKey().equals(key)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public void deleteRecord(String key) {
+        data.removeIf(t -> t.getSearchKey().equals(key));
+    }
+
+    public boolean contains(String key) {
+        if (key == null) return false;
+        for (T t : data) {
+            if (t.getSearchKey().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Database(String filename) {
         this.filename = filename;
@@ -45,7 +65,7 @@ public abstract class Database<T extends Recordable> {
     }
 
     public void saveToFile() throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) { //try automatically calls writer.close()
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) { //try() automatically calls writer.close()
             for (T t : data) {
                 writer.println(t.lineRepresentation());
             }

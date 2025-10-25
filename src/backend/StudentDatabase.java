@@ -4,6 +4,8 @@
  */
 package backend;
 
+import java.io.IOException;
+
 public class StudentDatabase extends Database<Student> {
 
     public StudentDatabase(String filename) {
@@ -23,14 +25,16 @@ public class StudentDatabase extends Database<Student> {
         return new Student(StudentID, name, age, gender, department, GPA);
     }
 
-    @Override
-    public boolean contains(String key) {
-        for (Student s : data) {
-            if (s.getName().equals(key)) {
-                return true;
+    public static int generateID(String filename) throws IOException {
+        StudentDatabase db = new StudentDatabase(filename);
+        db.readFromFile();
+        int temp = 999;
+        for (Student s : db.returnAllRecords()) {
+            if (s.getStudentID() > temp) {
+                temp = s.getStudentID();
             }
         }
-        return false;
+        return temp + 1;
     }
 
     public boolean contains(int key) {
@@ -42,16 +46,6 @@ public class StudentDatabase extends Database<Student> {
         return false;
     }
 
-    @Override
-    public Student getRecord(String key) {
-        for (Student s : data) {
-            if (s.getName().equals(key)) {
-                return s;
-            }
-        }
-        return null;
-    }
-
     public Student getRecord(int key) {
         for (Student s : data) {
             if (s.getStudentID() == key) {
@@ -59,11 +53,6 @@ public class StudentDatabase extends Database<Student> {
             }
         }
         return null;
-    }
-
-    @Override
-    public void deleteRecord(String key) {
-        data.removeIf(s -> s.getName().equals(key));
     }
 
     public void deleteRecord(int key) {
